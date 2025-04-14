@@ -1,3 +1,8 @@
 node_modules
 .DS_Store
 lib
+
+# IDE setting files
+.idea
+!.idea/icon.png
+.vscode

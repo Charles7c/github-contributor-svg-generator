@@ -2,6 +2,7 @@ export interface CliOptions {
   token: string // Github access token
   owner: string
   repo: string
+  exclude: string
   size: string
   width: string
   count: string

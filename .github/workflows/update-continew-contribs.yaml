@@ -40,7 +40,7 @@ jobs:
         run: pnpm install
 
       - name: Run generation script
-        run: pnpm tsx src/main.ts -t ${{ secrets.TOKEN }} -o continew-org
+        run: pnpm tsx src/main.ts -t ${{ secrets.TOKEN }} -o continew-org -e continew-cloud
 
       - name: Copy
         uses: appleboy/scp-action@v0.1.7

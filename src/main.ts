@@ -8,16 +8,17 @@ import type { CliOptions, RepoInfo, ContributorsInfo } from './types'
 
 
 async function main() {
-  const { Github_token: defaultToken, Github_owner: defaultOwner } = process.env
-  const defaultRepoName = await getRepoName()
+  // const { Github_token: defaultToken, Github_owner: defaultOwner } = process.env
+  // const defaultRepoName = await getRepoName()
   const GITHUBReg = /https:\/\/github.com\/([\w\-_]+)\/([\w\-_]+)/
   let urlInfo = null
   program
     .name('gh-contrib-svg')
     .arguments('[url]')
-    .option('-t, --token <token>', 'Personal GitHub token', defaultToken)
-    .option('-o, --owner <owner>', 'Repo owner name', defaultOwner)
-    .option('-r, --repo <repo>', 'GitHub repo path', defaultRepoName)
+    .option('-t, --token <token>', 'Personal GitHub token')
+    .option('-o, --owner <owner>', 'Repo owner name')
+    .option('-r, --repo <repo>', 'GitHub repo path')
+    .option('-e, --exclude <exclude>', 'Exclude gitHub repo path')
     .option('-s, --size <size>', 'Single avatar block size (pixel)', "120")
     .option('-w, --width <width>', 'Output image width (pixel)', "1000")
     .option('-c, --count <count>', 'Avatar count in one line', "8")
@@ -34,7 +35,7 @@ async function main() {
     })
     .parse(process.argv)
   const options = Object.assign(program.opts(), urlInfo)
-  const { token, repo, owner, size: avatarBlockSize, width, count: lineCount } = options as CliOptions
+  const { token, repo, owner, exclude, size: avatarBlockSize, width, count: lineCount } = options as CliOptions
 
   if (token && owner) {
     let repos: RepoInfo[] = []
@@ -55,9 +56,17 @@ async function main() {
     const startTime = performance.now()
     const allContributorsInfos = new Map<string, ContributorsInfo>()
     for (const { owner, repo } of repos) {
+      if (exclude && repo === exclude) {
+        continue
+      }
       const contributorsInfos = await fetchContributorsInfo({ token, repo, owner });
       contributorsInfos.forEach((info, username) => {
-        allContributorsInfos.set(username, info);
+        const userInfoByName = allContributorsInfos.get(username)
+        if (!userInfoByName) {
+          allContributorsInfos.set(username, info)
+        } else {
+          userInfoByName.commitURLs = [...userInfoByName.commitURLs, ...info.commitURLs]
+        }
       });
     }
 

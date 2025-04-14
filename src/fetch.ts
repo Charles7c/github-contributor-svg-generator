@@ -137,6 +137,9 @@ export async function fetchContributorsInfo(params: {
   const allContributorsInfos = new Map<string, ContributorsInfo>()
   contributorsData.forEach(contributor => {
     const [userName, avatarURL] = [contributor.login, contributor.avatar_url]
+    if (!userName || !avatarURL) {
+      return
+    }
     const userInfoByName = allContributorsInfos.get(userName)
     if (!userInfoByName) {
       allContributorsInfos.set(userName, {
