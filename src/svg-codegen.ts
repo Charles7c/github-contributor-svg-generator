@@ -86,7 +86,8 @@ export async function generateContributorsSVGFile(
   const generatingSvgSpin = ora('Generating SVG file...').start()
 
   // Hint: These constants may be able to be customized by config params
-  const Y_START = 40
+  // const Y_START = 40
+  const Y_START = 0
   const TITLE_FONT_SIZE = 20
   const TEXT_FONT_SIZE = 14
   const Y_CONTENT_START = Y_START + TITLE_FONT_SIZE
