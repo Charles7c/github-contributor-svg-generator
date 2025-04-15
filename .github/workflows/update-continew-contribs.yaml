@@ -39,7 +39,13 @@ jobs:
       - name: Install deps
         run: pnpm install
 
-      - name: Run generation script
+      - name: Run continew-admin svg generation script
+        run: pnpm tsx src/main.ts -t ${{ secrets.TOKEN }} -o continew-org -r continew-admin
+
+      - name: Run continew-starter svg generation script
+        run: pnpm tsx src/main.ts -t ${{ secrets.TOKEN }} -o continew-org -r continew-starter
+
+      - name: Run continew-org svg generation script
         run: pnpm tsx src/main.ts -t ${{ secrets.TOKEN }} -o continew-org -e continew-cloud
 
       - name: Copy
@@ -53,10 +59,4 @@ jobs:
           target: ${{ secrets.SERVER_PATH }}
           strip_components: 1
 
-      - name: Update image
-        run: |
-          git config user.email "charles7c@126.com"
-          git config user.name "Charles7c"
-          git add .
-          git commit -m "workflow: update image" && git push origin main || exit 0
 
